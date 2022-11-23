@@ -10,4 +10,8 @@ public interface OrderService {
     void update(Orders order);
     List<Orders> findAll();
     Orders findById(Long id);
+    Orders findBySenderId(Users senderId, Users recipientId);
+    List<Orders> findAllWhereIsMatch(Users users);
+    List<Orders> findAllYourOrders(Users users);
+    List<Orders> findAllOrdersToYou(Users users);
 }

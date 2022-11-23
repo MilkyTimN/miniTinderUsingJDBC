@@ -9,11 +9,13 @@ public class Orders {
     private Long id;
     private Users senderId;
     private Users recipientId;
+    private String message;
     private Boolean match;
 
-    public Orders(Users senderId, Users recipientId, Boolean match) {
+    public Orders(Users senderId, Users recipientId, String message, Boolean match) {
         this.senderId = senderId;
         this.recipientId = recipientId;
+        this.message = message;
         this.match = match;
     }
 }

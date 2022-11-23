@@ -23,4 +23,5 @@ public class Users {
         this.info = info;
         this.gender = gender;
     }
+
 }

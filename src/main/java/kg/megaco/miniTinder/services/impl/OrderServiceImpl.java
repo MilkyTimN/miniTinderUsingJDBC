@@ -22,11 +22,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void save(Orders order) {
         try(PreparedStatement preparedStatement = dbHelper.getPrepareStatement
-                ("INSERT INTO tb_orders (sender_id, recipient_id, match) VALUES (?,?,?)")) {
+                ("INSERT INTO tb_orders (sender_id, recipient_id, message, match) VALUES (?,?,?,?)")) {
 
             preparedStatement.setLong(1, order.getSenderId().getId());
             preparedStatement.setLong(2, order.getRecipientId().getId());
-            preparedStatement.setBoolean(3, false);
+            preparedStatement.setString(3, order.getMessage());
+            preparedStatement.setBoolean(4, false);
 
             preparedStatement.executeUpdate();
 
@@ -61,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
                 order.setId(resultSet.getLong("id"));
                 order.setSenderId(userService.findById(resultSet.getLong("id")));
                 order.setRecipientId(userService.findById(resultSet.getLong("id")));
+                order.setMessage(resultSet.getString("message"));
                 order.setMatch(resultSet.getBoolean("match"));
 
                 ordersList.add(order);
@@ -83,9 +85,106 @@ public class OrderServiceImpl implements OrderService {
                 order.setId(resultSet.getLong("id"));
                 order.setSenderId(userService.findById(resultSet.getLong("id")));
                 order.setRecipientId(userService.findById(resultSet.getLong("id")));
+                order.setMessage(resultSet.getString("message"));
                 order.setMatch(resultSet.getBoolean("match"));
 
             } return order;
+
+        } catch (SQLException e) {
+            throw new SqlException("Error to find all orders");
+        }
+    }
+
+    @Override
+    public Orders findBySenderId(Users senderId, Users recipientId) {
+        try(PreparedStatement preparedStatement = dbHelper.getPrepareStatement
+                ("SELECT * FROM tb_orders WHERE sender_id =? AND recipient_id =?")) {
+            preparedStatement.setLong(1, recipientId.getId());
+            preparedStatement.setLong(1, senderId.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Orders order = new Orders();
+            while (resultSet.next()){
+
+                order.setId(resultSet.getLong("id"));
+                order.setSenderId(userService.findById(resultSet.getLong("id")));
+                order.setRecipientId(userService.findById(resultSet.getLong("id")));
+                order.setMessage(resultSet.getString("message"));
+                order.setMatch(resultSet.getBoolean("match"));
+
+            } return order;
+
+        } catch (SQLException e) {
+            throw new SqlException("Error to find all orders");
+        }
+    }
+
+    @Override
+    public List<Orders> findAllWhereIsMatch(Users users) {
+        try(PreparedStatement preparedStatement = dbHelper.getPrepareStatement
+                ("SELECT * FROM tb_orders WHERE (sender_id =? OR recipient_id =?) AND match =?")) {
+            preparedStatement.setLong(1, users.getId());
+            preparedStatement.setLong(2, users.getId());
+            preparedStatement.setBoolean(3, true);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Orders> ordersList = new ArrayList<>();
+            while (resultSet.next()){
+                Orders order = new Orders();
+                order.setId(resultSet.getLong("id"));
+                order.setSenderId(userService.findById(resultSet.getLong("id")));
+                order.setRecipientId(userService.findById(resultSet.getLong("id")));
+                order.setMessage(resultSet.getString("message"));
+                order.setMatch(resultSet.getBoolean("match"));
+
+                ordersList.add(order);
+            } return ordersList;
+
+        } catch (SQLException e) {
+            throw new SqlException("Error to find all orders");
+        }
+    }
+
+    @Override
+    public List<Orders> findAllYourOrders(Users users) {
+        try(PreparedStatement preparedStatement = dbHelper.getPrepareStatement
+                ("SELECT * FROM tb_orders WHERE sender_id =?  AND match =?")) {
+            preparedStatement.setLong(1, users.getId());
+            preparedStatement.setBoolean(2, false);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Orders> ordersList = new ArrayList<>();
+            while (resultSet.next()){
+                Orders order = new Orders();
+                order.setId(resultSet.getLong("id"));
+                order.setSenderId(userService.findById(resultSet.getLong("id")));
+                order.setRecipientId(userService.findById(resultSet.getLong("id")));
+                order.setMessage(resultSet.getString("message"));
+                order.setMatch(resultSet.getBoolean("match"));
+
+                ordersList.add(order);
+            } return ordersList;
+
+        } catch (SQLException e) {
+            throw new SqlException("Error to find all orders");
+        }
+    }
+
+    @Override
+    public List<Orders> findAllOrdersToYou(Users users) {
+        try(PreparedStatement preparedStatement = dbHelper.getPrepareStatement
+                ("SELECT * FROM tb_orders WHERE recipient_id =? AND match =?")) {
+            preparedStatement.setLong(1, users.getId());
+            preparedStatement.setBoolean(2, false);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Orders> ordersList = new ArrayList<>();
+            while (resultSet.next()){
+                Orders order = new Orders();
+                order.setId(resultSet.getLong("id"));
+                order.setSenderId(userService.findById(resultSet.getLong("id")));
+                order.setRecipientId(userService.findById(resultSet.getLong("id")));
+                order.setMessage(resultSet.getString("message"));
+                order.setMatch(resultSet.getBoolean("match"));
+
+                ordersList.add(order);
+            } return ordersList;
 
         } catch (SQLException e) {
             throw new SqlException("Error to find all orders");

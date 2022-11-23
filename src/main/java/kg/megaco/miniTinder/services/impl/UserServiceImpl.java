@@ -6,6 +6,7 @@ import kg.megaco.miniTinder.dao.impl.DbHelperImpl;
 import kg.megaco.miniTinder.models.Users;
 import kg.megaco.miniTinder.models.enums.Gender;
 import kg.megaco.miniTinder.services.UserService;
+import kg.megaco.miniTinder.services.crud.Checking;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     DbHelper dbHelper = new DbHelperImpl();
+    Checking checking = new Checking();
 
     @Override
     public void save(Users users) {
@@ -61,19 +63,8 @@ public class UserServiceImpl implements UserService {
         try(PreparedStatement preparedStatement = dbHelper.getPrepareStatement
                 ("SELECT * FROM tb_users")) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Users> usersList = new ArrayList<>();
-            while (resultSet.next()){
-                Users user = new Users();
-                user.setId(resultSet.getLong("id"));
-                user.setName(resultSet.getString("name"));
-                user.setLogin(resultSet.getString("login"));
-                user.setPassword(resultSet.getString("password"));
-                user.setAge(resultSet.getInt("age"));
-                user.setInfo(resultSet.getString("info"));
-                user.setGender(Gender.valueOf(resultSet.getString("gender")));
 
-                usersList.add(user);
-            } return usersList;
+            return addUsersToList(resultSet);
 
         } catch (SQLException e) {
             throw new SqlException("Error to find all users");
@@ -109,13 +100,105 @@ public class UserServiceImpl implements UserService {
                 ("SELECT * FROM tb_users WHERE login =?")) {
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
-            Optional<ResultSet> optionalResultSet = Optional.ofNullable(resultSet);
-            if (optionalResultSet.isPresent()) {
-                return true;
+            Users user = new Users();
+            while (resultSet.next()){
+                user.setId(resultSet.getLong("id"));
+                user.setLogin(resultSet.getString("login"));
+                user.setName(resultSet.getString("name"));
+                user.setLogin(resultSet.getString("login"));
+                user.setPassword(resultSet.getString("password"));
+                user.setAge(resultSet.getInt("age"));
+                user.setInfo(resultSet.getString("info"));
+                user.setGender(Gender.valueOf(resultSet.getString("gender")));
             }
+
+            return checking.checkForUniqueLogin(user);
+
         } catch (SQLException e) {
             throw new SqlException("Error");
         }
-        return false;
+    }
+
+    @Override
+    public Boolean findByLoginToSignIn(String login, String password) {
+        try (PreparedStatement preparedStatement = dbHelper.getPrepareStatement
+                ("SELECT * FROM tb_users WHERE login =?")) {
+            preparedStatement.setString(1, login);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Users user = new Users();
+            while (resultSet.next()){
+                user.setId(resultSet.getLong("id"));
+                user.setLogin(resultSet.getString("login"));
+                user.setName(resultSet.getString("name"));
+                user.setLogin(resultSet.getString("login"));
+                user.setPassword(resultSet.getString("password"));
+                user.setAge(resultSet.getInt("age"));
+                user.setInfo(resultSet.getString("info"));
+                user.setGender(Gender.valueOf(resultSet.getString("gender")));
+            }
+
+            return checking.checkForUsersLoginAndPassword(user, login, password);
+
+        } catch (SQLException e) {
+            throw new SqlException("Error");
+        }
+    }
+
+    @Override
+    public List<Users> findAllFemaleUsers() {
+        try(PreparedStatement preparedStatement = dbHelper.getPrepareStatement
+                ("SELECT * FROM tb_users WHERE gender =?")) {
+            preparedStatement.setString(1, "FEMALE");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            return addUsersToList(resultSet);
+
+        } catch (SQLException e) {
+            throw new SqlException("Error to find all users");
+        }
+    }
+
+    @Override
+    public List<Users> findAllMaleUsers() {
+        try(PreparedStatement preparedStatement = dbHelper.getPrepareStatement
+                ("SELECT * FROM tb_users WHERE gender =?")) {
+            preparedStatement.setString(1, "MALE");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            return addUsersToList(resultSet);
+
+        } catch (SQLException e) {
+            throw new SqlException("Error to find all users");
+        }
+    }
+
+    @Override
+    public List<Users> findAllOtherUsers() {
+        try(PreparedStatement preparedStatement = dbHelper.getPrepareStatement
+                ("SELECT * FROM tb_users WHERE gender =?")) {
+            preparedStatement.setString(1, "OTHER");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            return addUsersToList(resultSet);
+
+        } catch (SQLException e) {
+            throw new SqlException("Error to find all users");
+        }
+    }
+
+    public List<Users> addUsersToList(ResultSet resultSet) throws SQLException {
+        List<Users> usersList = new ArrayList<>();
+        while (resultSet.next()){
+            Users user = new Users();
+            user.setId(resultSet.getLong("id"));
+            user.setName(resultSet.getString("name"));
+            user.setLogin(resultSet.getString("login"));
+            user.setPassword(resultSet.getString("password"));
+            user.setAge(resultSet.getInt("age"));
+            user.setInfo(resultSet.getString("info"));
+            user.setGender(Gender.valueOf(resultSet.getString("gender")));
+
+            usersList.add(user);
+        } return usersList;
     }
 }
