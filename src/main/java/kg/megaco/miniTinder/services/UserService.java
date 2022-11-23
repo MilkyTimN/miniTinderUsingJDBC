@@ -10,4 +10,5 @@ public interface UserService {
     void update(Users users);
     List<Users> findAll();
     Users findById(Long id);
+    Boolean findByLoginToCheckPresent(String login);
 }

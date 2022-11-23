@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
 
@@ -102,4 +103,19 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public Boolean findByLoginToCheckPresent(String login) {
+        try (PreparedStatement preparedStatement = dbHelper.getPrepareStatement
+                ("SELECT * FROM tb_users WHERE login =?")) {
+            preparedStatement.setString(1, login);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Optional<ResultSet> optionalResultSet = Optional.ofNullable(resultSet);
+            if (optionalResultSet.isPresent()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new SqlException("Error");
+        }
+        return false;
+    }
 }
