@@ -4,6 +4,7 @@ import kg.megaco.miniTinder.dao.DbHelper;
 import kg.megaco.miniTinder.dao.exception.SqlException;
 import kg.megaco.miniTinder.dao.impl.DbHelperImpl;
 import kg.megaco.miniTinder.models.Users;
+import kg.megaco.miniTinder.models.enums.Gender;
 import kg.megaco.miniTinder.services.UserService;
 
 import java.sql.PreparedStatement;
@@ -68,8 +69,7 @@ public class UserServiceImpl implements UserService {
                 user.setPassword(resultSet.getString("password"));
                 user.setAge(resultSet.getInt("age"));
                 user.setInfo(resultSet.getString("info"));
-                //TODO
-                //user.setGender(resultSet.getString("gender"));
+                user.setGender(Gender.valueOf(resultSet.getString("gender")));
 
                 usersList.add(user);
             } return usersList;
@@ -94,8 +94,7 @@ public class UserServiceImpl implements UserService {
                 user.setPassword(resultSet.getString("password"));
                 user.setAge(resultSet.getInt("age"));
                 user.setInfo(resultSet.getString("info"));
-                //TODO
-                //user.setGender(resultSet.getString("gender"));
+                user.setGender(Gender.valueOf(resultSet.getString("gender")));
             } return user;
 
         } catch (SQLException e) {
@@ -103,8 +102,4 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public void delete(Long id) {
-
-    }
 }

@@ -10,5 +10,4 @@ public interface UserService {
     void update(Users users);
     List<Users> findAll();
     Users findById(Long id);
-    void delete(Long id);
 }
