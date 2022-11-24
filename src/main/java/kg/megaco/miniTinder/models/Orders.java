@@ -18,4 +18,15 @@ public class Orders {
         this.message = message;
         this.match = match;
     }
+
+    @Override
+    public String toString() {
+        return
+                "Order id: " + id + "\n" +
+                "   Sender: " + senderId + "\n" +
+                "   RecipientId: " + recipientId + "\n" +
+                "   Message: " + message + "\n" +
+                "   Match: " + match + "\n" +
+                "----------";
+    }
 }

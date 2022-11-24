@@ -1,5 +1,6 @@
 package kg.megaco.miniTinder.services.crud;
 
+import kg.megaco.miniTinder.MiniTinderApplication;
 import kg.megaco.miniTinder.models.Orders;
 import kg.megaco.miniTinder.models.Users;
 import kg.megaco.miniTinder.services.OrderService;
@@ -30,7 +31,7 @@ public class CreateOrder {
 
     public void makeNewOrder(){
         System.out.println("Choose user id to send order");
-        switch (checking.getSignedInUser().getGender()) {
+        switch (MiniTinderApplication.getMainUsers().getGender()) {
             case FEMALE: usersList = userService.findAllMaleUsers();
             break;
             case MALE: usersList = userService.findAllFemaleUsers();
@@ -40,18 +41,27 @@ public class CreateOrder {
         usersList.forEach(u -> System.out.println(u.getId() + ": "
                 + u.getName() + "| age: " + u.getAge() + "\n" + u.getInfo() + "\n" + "----------"));
 
-        orders.setSenderId(checking.getSignedInUser());
+        orders.setSenderId(MiniTinderApplication.getMainUsers());
         orders.setRecipientId(userService.findById(scanner.nextLong()));
         recipientUser = orders.getRecipientId();
         orders.setMessage(scanner.next());
-        sameOrder = orderService.findBySenderId(checking.getSignedInUser(), recipientUser);
-        if (sameOrder.getId() != 0) {
-            orderService.update(sameOrder);
-            System.out.println("You have match!");
-        } else {
+        sameOrder = orderService.findBySenderId(MiniTinderApplication.getMainUsers(), recipientUser);
+        try {
+            if (sameOrder.getId() != 0) {
+                orderService.update(sameOrder);
+                System.out.println("You have match!");
+                System.out.println("----------");
+            } else {
+                orderService.save(orders);
+                System.out.println("Your order delivered");
+                System.out.println("----------");
+            }
+        } catch (NullPointerException e) {
             orderService.save(orders);
             System.out.println("Your order delivered");
+            System.out.println("----------");
         }
+
 
 
     }

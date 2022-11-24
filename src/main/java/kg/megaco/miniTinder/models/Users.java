@@ -24,4 +24,13 @@ public class Users {
         this.gender = gender;
     }
 
+    @Override
+    public String toString() {
+        return
+                "User id: " +id + "\n" +
+                "   name: " + name + "\n" +
+                "   age: " + age + "\n" +
+                "   info: " + info + "\n" +
+                "   gender: " + gender + "\n";
+    }
 }

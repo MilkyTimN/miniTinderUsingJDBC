@@ -100,14 +100,14 @@ public class OrderServiceImpl implements OrderService {
         try(PreparedStatement preparedStatement = dbHelper.getPrepareStatement
                 ("SELECT * FROM tb_orders WHERE sender_id =? AND recipient_id =?")) {
             preparedStatement.setLong(1, recipientId.getId());
-            preparedStatement.setLong(1, senderId.getId());
+            preparedStatement.setLong(2, senderId.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
             Orders order = new Orders();
             while (resultSet.next()){
 
                 order.setId(resultSet.getLong("id"));
-                order.setSenderId(userService.findById(resultSet.getLong("id")));
-                order.setRecipientId(userService.findById(resultSet.getLong("id")));
+                order.setSenderId(userService.findById(resultSet.getLong("sender_id")));
+                order.setRecipientId(userService.findById(resultSet.getLong("recipient_id")));
                 order.setMessage(resultSet.getString("message"));
                 order.setMatch(resultSet.getBoolean("match"));
 
@@ -130,8 +130,8 @@ public class OrderServiceImpl implements OrderService {
             while (resultSet.next()){
                 Orders order = new Orders();
                 order.setId(resultSet.getLong("id"));
-                order.setSenderId(userService.findById(resultSet.getLong("id")));
-                order.setRecipientId(userService.findById(resultSet.getLong("id")));
+                order.setSenderId(userService.findById(resultSet.getLong("sender_id")));
+                order.setRecipientId(userService.findById(resultSet.getLong("recipient_id")));
                 order.setMessage(resultSet.getString("message"));
                 order.setMatch(resultSet.getBoolean("match"));
 
@@ -154,8 +154,8 @@ public class OrderServiceImpl implements OrderService {
             while (resultSet.next()){
                 Orders order = new Orders();
                 order.setId(resultSet.getLong("id"));
-                order.setSenderId(userService.findById(resultSet.getLong("id")));
-                order.setRecipientId(userService.findById(resultSet.getLong("id")));
+                order.setSenderId(userService.findById(resultSet.getLong("sender_id")));
+                order.setRecipientId(userService.findById(resultSet.getLong("recipient_id")));
                 order.setMessage(resultSet.getString("message"));
                 order.setMatch(resultSet.getBoolean("match"));
 
@@ -178,8 +178,8 @@ public class OrderServiceImpl implements OrderService {
             while (resultSet.next()){
                 Orders order = new Orders();
                 order.setId(resultSet.getLong("id"));
-                order.setSenderId(userService.findById(resultSet.getLong("id")));
-                order.setRecipientId(userService.findById(resultSet.getLong("id")));
+                order.setSenderId(userService.findById(resultSet.getLong("sender_id")));
+                order.setRecipientId(userService.findById(resultSet.getLong("recipient_id")));
                 order.setMessage(resultSet.getString("message"));
                 order.setMatch(resultSet.getBoolean("match"));
 

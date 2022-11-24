@@ -59,7 +59,8 @@ public class SignUp {
         System.out.println("You signed up successfully");
         System.out.println("Please sing in");
 
-        signIn.signIn();
+        System.out.println("----------");
+        System.out.println();
 
 
     }

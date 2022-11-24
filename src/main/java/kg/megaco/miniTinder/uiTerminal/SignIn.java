@@ -1,5 +1,6 @@
 package kg.megaco.miniTinder.uiTerminal;
 
+import kg.megaco.miniTinder.MiniTinderApplication;
 import kg.megaco.miniTinder.models.Users;
 import kg.megaco.miniTinder.services.UserService;
 import kg.megaco.miniTinder.services.crud.*;
@@ -27,8 +28,9 @@ public class SignIn {
             String password = scanner.next();
             if (userService.findByLoginToSignIn(login, password)) {
                 System.out.println("You signed in successfully");
-               // System.out.println("Welcome " + checking.getSignedInUser().getName());
-                System.out.println("Welcome");
+                active = true;
+                System.out.println("----------");
+                System.out.println("Welcome " + MiniTinderApplication.getMainUsers().getName());
                 break;
             } else {
                 System.out.println("Incorrect data");
@@ -45,21 +47,20 @@ public class SignIn {
             switch (scanner.nextInt()){
                 case 1:
                     viewYourOrders.viewYourOrders();
-                    break;
+                    continue;
                 case 2:
                     viewOrdersToYou.viewYourOrders();
-                    break;
+                    continue;
                 case 3:
                     viewMatch.viewMatch();
-                    break;
+                    continue;
                 case 4:
                     createOrder.makeNewOrder();
-                    break;
+                    continue;
                 case 5: {
-                    checking.setSignedInUserNull();
-                    createOrder.setOrderNull();
-                    createOrder.setSameOrderNull();
+
                     System.out.println("See you");
+                    System.out.println("----------");
                     active = false;
                     break;
                 }

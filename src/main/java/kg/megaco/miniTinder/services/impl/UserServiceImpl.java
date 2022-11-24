@@ -103,7 +103,6 @@ public class UserServiceImpl implements UserService {
             Users user = new Users();
             while (resultSet.next()){
                 user.setId(resultSet.getLong("id"));
-                user.setLogin(resultSet.getString("login"));
                 user.setName(resultSet.getString("name"));
                 user.setLogin(resultSet.getString("login"));
                 user.setPassword(resultSet.getString("password"));
@@ -128,7 +127,6 @@ public class UserServiceImpl implements UserService {
             Users user = new Users();
             while (resultSet.next()){
                 user.setId(resultSet.getLong("id"));
-                user.setLogin(resultSet.getString("login"));
                 user.setName(resultSet.getString("name"));
                 user.setLogin(resultSet.getString("login"));
                 user.setPassword(resultSet.getString("password"));

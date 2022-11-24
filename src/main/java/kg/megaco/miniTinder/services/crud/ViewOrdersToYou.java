@@ -1,5 +1,6 @@
 package kg.megaco.miniTinder.services.crud;
 
+import kg.megaco.miniTinder.MiniTinderApplication;
 import kg.megaco.miniTinder.models.Orders;
 import kg.megaco.miniTinder.services.OrderService;
 import kg.megaco.miniTinder.services.impl.OrderServiceImpl;
@@ -12,8 +13,15 @@ public class ViewOrdersToYou {
     List<Orders> ordersList = null;
 
     public void viewYourOrders(){
-        ordersList = orderService.findAllOrdersToYou(checking.getSignedInUser());
-        ordersList.forEach(u -> System.out.println(u.getId() + ": " + u.getRecipientId()
-                + "\n" + u.getSenderId() + "\n" + "----------"));
+        ordersList = orderService.findAllOrdersToYou(MiniTinderApplication.getMainUsers());
+        for (Orders o: ordersList) {
+            if(o.getRecipientId().getId() == MiniTinderApplication.getMainUsers().getId()){
+                System.out.println("Order id: " + o.getId().toString() + "\n" + o.getSenderId());
+            } else {
+                System.out.println("Order id: " + o.getId().toString() + "\n" + o.getRecipientId());
+            }
+        }
+        System.out.println("----------");
+
     }
 }
